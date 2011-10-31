@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <!-- Slide meta data, remove/edit as you see fit -->
+        <title>Slippy Documentation</title>
+        <meta name="generator" content="Organic" />
+        <meta name="author" content="Jordi Boggiano" />
+        <meta name="company" content="Nelmio AG" />
+        <meta name="email" content="j.boggiano@seld.be" />
+        <meta name="date" content="2010-05-30" />
+        <meta name="venue" content="The Internets" />
+        <!-- Slippy core file and dependencies -->
+        <script type="text/javascript" src="slippy/src/jquery.min.js"></script>
+        <script type="text/javascript" src="slippy/src/jquery.history.js"></script>
+        <script type="text/javascript" src="slippy/src/slippy.js"></script>
+        <!-- Slippy structural styles -->
+        <link type="text/css" rel="stylesheet" href="slippy/src/slippy.css"/>
+        <!-- Slippy theme -->
+        <link type="text/css" rel="stylesheet" href="slippy/src/slippy-pure.css"/>
+        <!-- Syntax highlighting core file  -->
+        <script type="text/javascript" src="slippy/src/highlighter/shCore.js"></script>
+        <!-- Syntax highlighting brushes, remove those you don't need -->
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushBash.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushCpp.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushCSharp.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushCss.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushDelphi.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushDiff.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushGroovy.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushJava.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushJScript.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushPhp.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushPlain.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushPython.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushRuby.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushScala.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushSql.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushVb.js"></script>
+        <script type="text/javascript" src="slippy/src/highlighter/shBrushXml.js"></script>
+        <!-- Syntax highlighting styles-->
+        <link type="text/css" rel="stylesheet" href="slippy/src/highlighter/shCore.css"/>
+        <link type="text/css" rel="stylesheet" href="slippy/src/highlighter/shThemeEclipse.css"/>
+        <!-- Slippy init code -->
+        <script type="text/javascript">
+            $(function() {
+                $(".slide").slippy({
+                    // settings go here
+                    // possible values are:
+                    //  - animLen, duration for default animations (0 = disabled)
+                    //  - animInForward, receives a slide and animates it
+                    //  - animInRewind, receives a slide and animates it
+                    //  - animOutForward, receives a slide and animates it
+                    //  - animOutRewind, receives a slide and animates it
+                    //  - baseWidth, defines the base for img resizing, if you don't want only
+                    //    full-width images, specify this as the pixel width of a slide so that
+                    //    images are scaled properly (default is 620px wide)
+                    //  - ratio, defines the width/height ratio of the slides, defaults to 1.3 (620x476)
+                    //  - margin, the fraction of screen to use as slide margin, defaults to 0.15
+                });
+                SyntaxHighlighter.all();
+            });
+        </script>
+        <!-- Custom style for this deck -->
+        <style type="text/css">
+            .slide.nofooter {
+                border: 0;
+                background: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="slide">
+          <div class="vcenter">
+            <h2>OpenFlow フレームワーク Trema</h2>
+
+            <br/><br/><br/>
+
+            <h2>高宮 安仁、すぎょう かずし</h2>
+            <h2>第二回 クラウドネットワーク研究会</h2>
+            <h2>2011 年 11 月 14 日</h2>
+          </div>
+        </div>
+
+
+        <div class="slide">
+          <h1>なぜ、○○フレームワーク?</h1>
+          <ul>
+            <li>Web フレームワーク: Rails, Sinatra, Lift</li>
+            <li>よくある処理が簡単に短く書ける</li>
+            <li>コードを書く → テスト → デバッグのループを緊密に</li>
+          </ul>
+        </div>
+
+
+        <div class="slide" data-layout="alt">
+          <h1>Trema フレームワークの特徴</h1>
+          <ul>
+            <li>Ruby or C (Ruby の生産性 + C の性能)</li>
+            <li>ノート PC 一台で開発とデバッグを簡潔できる</li>
+            <li>"今どき" のアジャイル開発環境 (ユニットテスト、受け入れテスト etc.)</li>
+            <li>豊富なサンプルコード</li>
+          </ul>
+        </div>
+
+
+        <div class="slide" data-layout="alt">
+          <h1>Trema を使った開発の流れ</h1>
+          <h2>ノート PC 1台でこれ↓がすべてできます</h2>
+          <ol>
+            <li>仮想ネットワーク (スイッチ + ホスト + リンク) を定義</li>
+            <li>コントローラを書いて↑の↑で実行</li>
+            <li>テストパケットの送受信</li>
+            <li>フローテーブルやメッセージなどのダンプ</li>
+            <li>実環境へのデプロイ</li>
+          </ol>
+        </div>
+
+
+        <div class="slide" data-layout="alt">
+          <h1>Trema チーム @ NEC 研究所</h1>
+          <ul>
+            <li>高宮 (元 HPC、分散ミドル、Tsubame など)</li>
+            <li>すぎょう (元 KAME プロジェクト、スーパーハカー)</li>
+            <li>千葉 (ネットワーク屋。A 社 → M 社 → NEC)</li>
+          </ul>
+        </div>
+
+
+        <div class="slide">
+          <div class="vcenter">
+            <h1>ライブデモ</h1>
+            <h2>Trema のセットアップからコーディング、実行、デバッグまで</h2>
+          </div>
+        </div>
+
+
+        <div class="slide" data-layout="alt">
+          <h1>セットアップしてみよう!</h1>
+          <pre class="brush: bash">
+            % git clone git://github.com/trema/trema.git
+            % ./trema/build.rb
+          </pre>
+          <h2>たったこれだけ!</h2>
+        </div>
+
+
+        <div class="slide">
+          <h1>コントローラを書いてみよう!</h1>
+
+          <ul>
+            <li>コントローラはクラスとして実装</li>
+            <li>Controller クラスを継承</li>
+          </ul>
+          <pre class="brush: ruby">
+            # simple-controller.rb
+
+            class SimpleController < Controller
+            end
+          </pre>
+
+          <br/>
+          <p>trema run コマンドで実行</p>
+          <pre class="brush: bash">
+            % ./trema run ./simple-controller.rb
+          </pre>
+        </div>
+
+
+        <div class="slide">
+          <h1>スイッチをつなげてみよう!</h1>
+          <pre class="brush: ruby">
+            class SimpleController < Controller
+
+              #
+              # スイッチの接続イベントに反応するハンドラ
+              # dpid = スイッチ固有な ID (64bit)
+              #
+              def switch_connected dpid
+                puts "Hello switch #{ dpid.to_hex }!"
+              end
+            end
+          </pre>
+          <ul>
+            <li>OpenFlow コントローラはイベントドリブンであり、各種イベントやメッセージが来たときにどうするか (=ハンドラメソッド) が必要</li>
+            <li>ハンドラメソッドを書くと自動的に登録される (ex. Rails)</li>
+            <li>ヘルパメソッド :to_hex は int を 0xabc のような 16 進文字列に変換</li>
+          </ul>
+        </div>
+
+
+        <div class="slide">
+          <h1>C で書くとこうなる</h1>
+          <pre class="brush: c">
+            #include &lt;inttypes.h&gt;
+            #include "trema.h"
+
+            static void
+            handle_switch_connected( uint64_t dpid, void *user_data ) {
+              printf( "Hello switch %#" PRIx64 "!", dpid );
+            }
+
+            int
+            main( int argc, char *argv[] ) {
+              # Trema フレームワークを初期化
+              init_trema( &argc, &argv );
+
+              # ハンドラを登録
+              set_switch_connected_handler(
+                handle_switch_connected,
+                NULL
+              );
+
+              # メインループ
+              start_trema();
+
+              return 0;
+            }
+          </pre>
+        </div>
+
+
+        <div class="slide">
+          <h1>スイッチをつなげてみよう!</h1>
+
+          <ul>
+            <li>コントローラは Trema の仮想ネットワークで実行可能</li>
+            <li>仮想ネットワークの構成は上の DSL で記述</li>
+          </ul>
+          <pre class="brush: ruby">
+            # network.conf
+            vswitch { dpid 0xabc }  # 仮想スイッチその 1
+            vswitch { dpid 0xdef }  # 仮想スイッチその 2
+          </pre>
+
+          <br/>
+          <ul>
+            <li>trema run の -c オプションに仮想ネットワーク構成を渡すと、その上でコントローラが起動する</li>
+            <li>スイッチが起動したことを SimpleController#switch_connected ハンドラがハンドルし "Hello switch 0x○○○!" を表示</li>
+          </ul>
+          <pre class="brush: bash">
+            % ./trema run simple-controller.rb -c network.conf
+            Hello switch 0xabc!
+            Hello switch 0xdef!
+          </pre>
+        </div>
+
+
+        <div class="slide">
+          <h1>switch_connected が届くまで</h1>
+          <ul>
+            <li>実は、OpenFlow には switch_connected イベントというものは無い</li>
+            <li>Trema がスイッチの接続と切断をイベントに変換</li>
+            <li>裏では次の OpenFlow シーケンスが走っている</li>
+          </ul>
+
+          <br/>
+          <br/>
+          <pre>
+            スイッチ                          コントローラ
+              |                                |
+              | secchan                        |
+              |------------------------------->|
+              |                                |
+              |                          HELLO |
+              |<-------------------------------|
+              | HELLO                          |
+              |------------------------------->|
+              |                                |
+              |               FEATURES REQUEST |
+              |<-------------------------------|
+              | FEATURES REPLY                 |
+              |------------------------------->|
+              |                                |
+              |                           Init |
+              |<-------------------------------|
+              |                                |
+              |                                | switch_ready
+          </pre>
+        </div>
+
+
+        <div class="slide">
+          <h1>パケットを送ってみよう!</h1>
+          <p>パケットを送受信するためのホストを 2 台追加して、スイッチにつなぐ</p>
+          <pre class="brush: ruby">
+            # network.conf
+            vswitch { dpid 0xabc }  # 仮想スイッチ
+
+            # 仮想ホストその 1
+            vhost("host1") {
+              mac "00:00:00:00:00:01"
+            }
+            # 仮想ホストその 2
+            vhost("host2") {
+              mac "00:00:00:00:00:02"
+            }
+
+            # スイッチとホストをつなげる
+            link "0xabc", "host1"
+            link "0xabc", "host2"
+          </pre>
+        </div>
+
+
+        <div class="slide">
+          <h1>パケットを送ってみよう!</h1>
+
+          <p>知らないパケットの受信 (pakcet_in) に反応するハンドラを追加</p>
+          <pre class="brush: ruby">
+            class SimpleController < Controller
+              #
+              # packet_in のハンドラ
+              #   dpid: パケットを受け取ったスイッチの dpid
+              #   message: packet_in メッセージ本体
+              #
+              def packet_in dpid, message
+                puts "New packet_in message!"
+              end
+
+              def switch_connected dpid
+                puts "Hello switch #{ dpid.to_hex }!"
+              end
+            end
+          </pre>
+        </div>
+
+
+        <div class="slide">
+          <h1>パケットを送ってみよう!</h1>
+          <ul>
+            <li>send_packets コマンドでテストパケットを送受信可能</li>
+            <li>host1 から host2 にパケットを 10 個送信</li>
+          </ul>
+
+          <pre class="brush: bash">
+            % ./trema send_packets --source host1 --dest host2 --n_pkts 10 --pps 10
+            New packet_in message!
+            New packet_in message!
+            New packet_in message!
+            New packet_in message!
+            New packet_in message!
+            New packet_in message!
+            New packet_in message!
+            New packet_in message!
+            New packet_in message!
+            New packet_in message!
+          </pre>
+
+          <p>→ packet_in ハンドラが 10 回呼ばれる</p>
+        </div>
+
+
+        <div class="slide">
+          <h1>仮想ネットワーク DSL</h1>
+          <ul>
+            <li>開発マシン上に好きなトポロジを構築してコントローラを実行できる</li>
+            <li>テストパケットを送受信してコントローラをデバッグできる</li>
+            <li>使える部品は仮想スイッチ、仮想ホスト、仮想リンク</li>
+          </ul>
+          <pre class="brush: ruby">
+            # さっきの例を再掲
+
+            # 仮想スイッチ
+            vswitch { dpid 0xabc }
+
+            # 仮想ホストその 1
+            vhost("host1") {
+              mac "00:00:00:00:00:01"
+            }
+            # 仮想ホストその 2
+            vhost("host2") {
+              mac "00:00:00:00:00:02"
+            }
+
+            # スイッチとホストをつなげる
+            link "0xabc", "host1"
+            link "0xabc", "host2"
+          </pre>
+        </div>
+
+
+        <div class="slide">
+          <h1>仮想ネットワーク DSL</h1>
+          <p>大規模で複雑なトポロジを書くのは面倒で間違いやすい</p>
+          <pre class="brush: ruby">
+            # スイッチ 10 台、ホスト 10 台のフルメッシュをベタに書いた例 (約 80 行)
+
+            vswitch { dpid "0x1" }
+            vswitch { dpid "0x2" }
+            vswitch { dpid "0x3" }
+            vswitch { dpid "0x4" }
+              ...
+
+            vhost "host1"
+            vhost "host2"
+            vhost "host3"
+            vhost "host4"
+              ...
+
+            link "0x1", "host1"
+            link "0x2", "host2"
+            link "0x3", "host3"
+            link "0x4", "host4"
+              ...
+            link "0x1", "0x2"
+            link "0x1", "0x3"
+            link "0x1", "0x4"
+              ...
+          </pre>
+        </div>
+
+
+        <div class="slide">
+          <h1>仮想ネットワーク DSL</h1>
+          <ul>
+            <li>実はこの DSL は Ruby の文法がそのまま使える (言語内 DSL)</li>
+            <li>フルメッシュなどの複雑なトポロジも短く書ける</li>
+          </ul>
+          <pre class="brush: ruby">
+            # スイッチ 10 台、ホスト 10 台のフルメッシュ
+
+            ( 1..10 ).each do | n1 |
+              vswitch { dpid "0x#{ n1 }" }
+              vhost "host#{ n1 }"
+              link "0x#{ n1 }", "host#{ n1 }"
+              ( 1..10 ).each do | n2 |
+                link "0x#{ n1 }", "0x#{ n2 }" if n1 < n2
+              end
+            end
+          </pre>
+        </div>
+
+
+        <div class="slide">
+          <h1>フローテーブルを書き換えてみよう</h1>
+          <pre class="brush: ruby">
+            # パケットを入ってきたスイッチポートの隣りのポートに転送するフローエントリを書く
+
+            class SimpleController < Controller
+              def packet_in dpid, message
+                send_flow_mod_add(
+                  dpid,
+                  :match => ExactMatch.from( message ),
+                  :buffer_id => message.buffer_id,
+                  actions => ActionOutput.new( message.in_port + 1 )
+                )
+              end
+            end
+          </pre>
+        </div>
+
+
+        <div class="slide">
+          <h1>ベンチマーク (cbench) を実行してみよう!</h1>
+
+          <p>cbench: 一秒あたりの flow_mod 数を計測するベンチマーク</p>
+
+          <pre class="brush: bash">
+            % ./trema run simple-controller -d
+            % ./objects/oflops/bin/cbench --switches 1 --loops 10 --delay 1000
+            cbench: controller benchmarking tool
+               running in mode 'latency'
+               connecting to controller at localhost:6633 
+               faking 1 switches :: 10 tests each; 1000 ms per test
+               with 100000 unique source MACs per switch
+               starting test with 1000 ms delay after features_reply
+               ignoring first 1 "warmup" and last 0 "cooldown" loops
+               debugging info is off
+            1   switches: fmods/sec:  10627   total = 10.626989 per ms 
+            1   switches: fmods/sec:  8184   total = 8.183992 per ms 
+            1   switches: fmods/sec:  7542   total = 7.541992 per ms 
+            1   switches: fmods/sec:  7852   total = 7.851992 per ms 
+            1   switches: fmods/sec:  8243   total = 8.242992 per ms 
+            1   switches: fmods/sec:  7807   total = 7.806977 per ms 
+            1   switches: fmods/sec:  8484   total = 8.483992 per ms 
+            1   switches: fmods/sec:  8401   total = 8.400992 per ms 
+            1   switches: fmods/sec:  8129   total = 8.128992 per ms 
+            1   switches: fmods/sec:  7853   total = 7.852788 per ms 
+            RESULT: 1 switches 9 tests min/max/avg/stdev = 7541.99/8483.99/8054.97/292.12 responses/s
+        </div>
+
+
+        <div class="slide">
+          <h1>参考: C で動かした場合</h1>
+
+          <ul>
+            <li>Ruby 版の 1.7 倍くらい速い</li>
+            <li>最初は Ruby でサッと書いて、必要に応じて C で書き直すのがおすすめ</li>
+          </ul>
+          <pre class="brush: bash">
+            cbench: controller benchmarking tool
+               running in mode 'latency'
+               connecting to controller at localhost:6633 
+               faking 1 switches :: 10 tests each; 1000 ms per test
+               with 100000 unique source MACs per switch
+               starting test with 1000 ms delay after features_reply
+               ignoring first 1 "warmup" and last 0 "cooldown" loops
+               debugging info is off
+            1   switches: fmods/sec:  8891   total = 8.890991 per ms 
+            1   switches: fmods/sec:  14864   total = 14.863985 per ms 
+            1   switches: fmods/sec:  14316   total = 14.315986 per ms 
+            1   switches: fmods/sec:  14548   total = 14.547985 per ms 
+            1   switches: fmods/sec:  14648   total = 14.647956 per ms 
+            1   switches: fmods/sec:  13318   total = 13.317987 per ms 
+            1   switches: fmods/sec:  14376   total = 14.375986 per ms 
+            1   switches: fmods/sec:  13143   total = 13.142987 per ms 
+            1   switches: fmods/sec:  14275   total = 14.274986 per ms 
+            1   switches: fmods/sec:  14280   total = 14.279986 per ms 
+            RESULT: 1 switches 9 tests min/max/avg/stdev = 13142.99/14863.99/14196.43/549.16 responses/s
+          </pre>
+        </div>
+
+
+        <div class="slide">
+          <h1>サンプルアプリの紹介</h1>
+
+          <ul>
+            <li>Trema には大小さまざまなサンプルアプリが付属 (Ruby, C 両方)</li>
+            <li>ひととおり動かしてソースを読むことをおすすめ</li>
+          </ul>
+          <pre class="brush: bash">
+            % ls src/examples
+            cbench_switch          dumper            hash_bench
+            hello_trema            learning_switch   list_switches
+            multi_learning_switch  openflow_message  packet_in
+            repeater_hub           switch_info       switch_monitor
+            traffic_monitor
+          </pre>
+
+          <p>このほか、trema/apps というサンプルアプリ用リポジトリもあります</p>
+          <p><a href="https://github.com/trema/apps">https://github.com/trema/apps</a></p>
+        </div>
+
+
+        <div class="slide">
+          <h1>ユニットテスト</h1>
+
+          <p>ユニットテストが RSpec (= Ruby の標準的なユニットテストフレームワーク) で書けます</p>
+          <p>ホスト間でのパケットの送受信数、スイッチのフローテーブルの中身などをユニットテスト可能</p>
+
+          <pre class="brush: bash">
+            describe RepeaterHub do
+              around do | example |
+                network {  # ネットワークの定義
+                  vswitch("switch") { datapath_id "0xabc" }
+                  vhost("host1") { promisc "on" }
+                  vhost("host2") { promisc "on" }
+                  link "switch", "host1"
+                  link "switch", "host2"
+                }.run( RepeaterHub ) {
+                  example.run
+                }
+              end
+
+              context "when host1 sends one packet to host2" do
+                describe "switch" do
+                  before { send_packets "host1", "host2" }
+                  subject { switch( "switch" ) }
+                  it { should have( 1 ).flows }
+                  its( "flows.first.actions" ) { should == "FLOOD" }
+                end
+              end
+            end
+          </pre>
+        </div>
+
+
+
+        <div class="slide">
+          <h1>まとめ</h1>
+
+          <ul>
+            <li>OpenFlow フレームワーク</li>
+            <li>開発からテスト、デプロイまでがノート PC 一台でできます</li>
+            <li>サンプルたくさんついてます</li>
+            <li>コミッタ & コントリビュータ募集中</li>
+            <li>Software Design に好評連載中! 公式ハッシュタグ #友太郎</li>
+          </ul>
+
+          <br/><br/>
+          <h2>情報源</h2>
+          <ul>
+            <li>Trema ホームページ: <a href="http://trema.github.com/trema/">http://trema.github.com/trema/</a></li>
+            <li>GitHub プロジェクトページ: <a href="https://github.com/trema/">https://github.com/trema/</a></li>
+            <li>メーリングリスト: <a href="https://groups.google.com/group/trema-dev/">https://groups.google.com/group/trema-dev/</a></li>
+            <li>Twitter アカウント: <a href="http://twitter.com/trema_news">@trema_news</a></li>
+          </ul>
+        </div>
+
+
+        <div class="layout" data-name="default">
+          <content></content>
+          <div class="footer">
+            <span class="left">高宮 安仁、すぎょう かずし</span>
+            <span class="right">Trema on <a href="http://github.com/trema/trema/">github</a></span>
+            <span class="right">Twitter <a href="http://twitter.com/yasuhito">@yasuhito</a>, <a href="http://twitter.com/trema_news">@trema_news</a></span>
+            <hr class="defloat" />
+          </div>
+        </div>
+
+
+        <div class="layout nofooter" data-name="alt">
+          <content></content>
+        </div>
+    </body>
+</html>
