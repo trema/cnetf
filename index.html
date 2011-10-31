@@ -75,7 +75,7 @@
 
         <br/><br/><br/>
 
-        <h3>高宮 安仁、すぎょう かずし</h3>
+        <h3>高宮 安仁、すぎょう かずし (NEC)</h3>
         <h3>第二回 クラウドネットワーク研究会</h3>
         <h3>2011 年 11 月 4 日</h3>
       </div>
@@ -457,28 +457,27 @@
       <h1>仮想ネットワーク DSL</h1>
       <p>大規模で複雑なトポロジを書くのは面倒で間違いやすい</p>
       <pre class="brush: ruby">
-        # スイッチ 10 台、ホスト 10 台のフルメッシュをベタに書いた例 (約 80 行)
+        # スイッチ 10 台のフルメッシュ接続をベタに書いた例 (約 80 行)
 
         vswitch { dpid "0x1" }
         vswitch { dpid "0x2" }
         vswitch { dpid "0x3" }
         vswitch { dpid "0x4" }
+        vswitch { dpid "0x5" }
+        vswitch { dpid "0x6" }
           ...
 
-        vhost "host1"
-        vhost "host2"
-        vhost "host3"
-        vhost "host4"
-          ...
-
-        link "0x1", "host1"
-        link "0x2", "host2"
-        link "0x3", "host3"
-        link "0x4", "host4"
-          ...
         link "0x1", "0x2"
         link "0x1", "0x3"
         link "0x1", "0x4"
+        link "0x1", "0x5"
+        link "0x1", "0x6"
+        link "0x1", "0x7"
+        link "0x1", "0x8"
+        link "0x1", "0x9"
+        link "0x1", "0x10"
+        link "0x2", "0x3"
+        link "0x2", "0x4"
           ...
       </pre>
     </div>
@@ -487,21 +486,21 @@
     <div class="slide">
       <h1>仮想ネットワーク DSL</h1>
       <ul>
-        <li>実はこの DSL は Ruby の文法がそのまま使える (言語内 DSL)</li>
-        <li>フルメッシュなどの複雑なトポロジも短く書ける</li>
+        <li>実は DSL では Ruby の文法がそのまま使える (言語内 DSL)</li>
+        <li>フルメッシュを 2 重ループで簡潔に書くと次の通り:
       </ul>
       <pre class="brush: ruby">
-        # スイッチ 10 台、ホスト 10 台のフルメッシュ
+        $nswitch = 10
 
-        ( 1..10 ).each do | n1 |
-          vswitch { dpid "0x#{ n1 }" }
-          vhost "host#{ n1 }"
-          link "0x#{ n1 }", "host#{ n1 }"
-          ( 1..10 ).each do | n2 |
-            link "0x#{ n1 }", "0x#{ n2 }" if n1 < n2
+        1.upto( $nswitch ).each do | id1 |
+          vswitch { dpid id1.to_hex }
+
+          1.upto( $nswitch ).each do | id2 |
+            link id1.to_hex, id2.to_hex if id1 < id2
           end
         end
       </pre>
+      短くなった!
     </div>
 
 
@@ -522,8 +521,6 @@
           end
         end
       </pre>
-
-      <p>必須パラメータを指定するだけでいいので、非常にコード量が少ない!</p>
     </div>
 
 
