@@ -75,9 +75,9 @@
 
         <br/><br/><br/>
 
-        <h2>高宮 安仁、すぎょう かずし</h2>
-        <h2>第二回 クラウドネットワーク研究会</h2>
-        <h2>2011 年 11 月 14 日</h2>
+        <h3>高宮 安仁、すぎょう かずし</h3>
+        <h3>第二回 クラウドネットワーク研究会</h3>
+        <h3>2011 年 11 月 4 日</h3>
       </div>
     </div>
 
@@ -96,9 +96,83 @@
       <h1>Trema フレームワークの特徴</h1>
       <ul>
         <li>Ruby or C (Ruby の生産性 + C の性能)</li>
-        <li>ノート PC 一台で開発とデバッグを簡潔できる</li>
+        <li>ノート PC 一台で開発とデバッグを完結できる</li>
         <li>"今どき" のアジャイル開発環境 (ユニットテスト、受け入れテスト etc.)</li>
         <li>豊富なサンプルコード</li>
+      </ul>
+    </div>
+
+
+    <div class="slide">
+      <h1>Trema の設計思想</h1>
+
+      <div class="vcenter">
+        <h1>「短く書けるようにする」</h1>
+      </div>
+    </div>
+
+
+    <div class="slide">
+      <h1>プログラムは短ければ短いほど、</h1>
+      <ul>
+        <li>早く完成させることができ、</li>
+        <li>バグが少なく、</li>
+        <li>すぐ読むことができ、</li>
+        <li>メンテナンスが楽だから</li>
+      </ul>
+    </div>
+
+
+    <div class="slide">
+      <h1>NOX じゃダメなの？</h1>
+
+      <p>NOX の pyswitch.py から抜粋</p>
+      <pre class="brush: python">
+    class pyswitch(Component):
+        def __init__(self, ctxt):
+            global inst
+            Component.__init__(self, ctxt)
+            self.st = {}
+
+            inst = self
+
+        def install(self):
+            inst.register_for_packet_in(packet_in_callback)
+            inst.register_for_datapath_leave(datapath_leave_callback)
+            inst.register_for_datapath_join(datapath_join_callback)
+            inst.post_callback(1, timer_callback)
+
+        def getInterface(self):
+            return str(pyswitch)
+
+    def getFactory():
+        class Factory:
+            def instance(self, ctxt):
+                return pyswitch(ctxt)
+
+        return Factory()
+      </pre>
+    </div>
+
+
+    <div class="slide">
+      <h1>Beacon じゃダメなの？</h1>
+
+      <p>プログラマに「パブリック スタティック ボイド メイン」と書かせる言語は好きではない</p>
+      <div align="center">
+        <img src="./static-typing.gif" />
+      </div>
+    </div>
+
+
+    <div class="slide">
+      <h1>正しい説明</h1>
+
+      <h2>使い分けてください:</h2>
+      <ul>
+        <li>Ruby や C で書く人: Trema</li>
+        <li>Java で書く人: Beacon</li>
+        <li>Python や C++ で書く人: NOX</li>
       </ul>
     </div>
 
@@ -433,6 +507,7 @@
 
     <div class="slide">
       <h1>フローテーブルを書き換えてみよう</h1>
+
       <pre class="brush: ruby">
         # パケットを入ってきたスイッチポートの隣りのポートに転送するフローエントリを書く
 
@@ -446,6 +521,64 @@
             )
           end
         end
+      </pre>
+
+      <p>必須パラメータを指定するだけでいいので、非常にコード量が少ない!</p>
+    </div>
+
+
+    <div class="slide">
+      <h1>send_flow_mod_add()</h1>
+      <pre class="brush: ruby">
+        send_flow_mod_add(
+          dpid,
+          :match => ExactMatch.from( message ),
+          :buffer_id => message.buffer_id,
+          actions => ActionOutput.new( message.in_port + 1 )
+        )
+      </pre>
+
+      vs.
+
+      <pre class="brush: c">
+        // C で同じ処理をした場合
+        buffer *flow_mod = create_flow_mod(
+          get_transaction_id(),
+          match,
+          get_cookie(),
+          OFPFC_ADD,
+          0,
+          0,
+          UINT16_MAX,
+          message.buffer_id,
+          OFPP_NONE,
+          0,
+          actions
+        );
+        send_openflow_message( datapath_id, flow_mod );
+      </pre>
+    </div>
+    
+
+    <div class="slide">
+      <h1>ExactMatch.from</h1>
+      <pre class="brush: ruby">
+        ExactMatch.from( message )
+      </pre>
+
+      vs.
+
+      <pre class="brush: ruby">
+        Match.new(
+          :in_port = message.in_port,
+          :nw_src => message.nw_src,
+          :nw_dst => message.nw_dst,
+          :tp_src => message.tp_src,
+          :tp_dst => message.tp_dst,
+          :dl_src => message.dl_src,
+          :dl_dst => message.dl_dst,
+             ...
+        )
       </pre>
     </div>
 
