@@ -101,12 +101,30 @@
 
 
     .slide
-      %h1 プログラムは短ければ短いほど、
+      %h1 なぜ短くしたいのか？
+      %h2 プログラムは短ければ短いほど、
       %ul
         %li 早く完成させることができ、
         %li バグが少なく、
         %li すぐ読むことができ、
         %li メンテナンスが楽だから
+      %pre.brush:.ruby
+        :preserve
+          # 例: Trema で書いたリピータハブ
+          class RepeaterHub < Controller
+            def packet_in datapath_id, message
+              send_flow_mod_add(
+                datapath_id,
+                :match => ExactMatch.from( message ),
+                :actions => ActionOutput.new( OFPP_FLOOD )
+              )
+              send_packet_out(
+                datapath_id,
+                :data => message.data,
+                :actions => ActionOutput.new( OFPP_FLOOD )
+              )
+            end
+          end
 
 
     .slide
@@ -157,21 +175,13 @@
 
     .slide
       %h1 Trema を使った開発の流れ
-      %h2 ノート PC 1台でこれ↓がすべてできます
+      %h2 ノート PC 1台ですべてできます
       %ol
         %li 仮想ネットワーク (スイッチ + ホスト + リンク) を定義
-        %li コントローラを書いて↑の↑で実行
+        %li コントローラを書いて仮想ネットワークで実行
         %li テストパケットの送受信
         %li フローテーブルやメッセージなどのダンプ
         %li 実環境へのデプロイ
-
-
-    .slide
-      %h1 Trema チーム @ NEC 研究所
-      %ul
-        %li 高宮 (元 HPC、分散ミドル、Tsubame など)
-        %li すぎょう (元 KAME プロジェクト、スーパーハカー)
-        %li 千葉 (ネットワーク屋。A 社 → M 社 → NEC)
 
 
     .slide
@@ -640,6 +650,14 @@
         %li
           Twitter アカウント:
           %a{:href => "http://twitter.com/trema_news"} @trema_news
+
+
+    .slide
+      %h1 Trema チーム @ NEC 研究所
+      %ul
+        %li 高宮 (元 HPC、分散ミドル、Tsubame など)
+        %li すぎょう (元 KAME プロジェクト、スーパーハカー)
+        %li 千葉 (ネットワーク屋。A 社 → M 社 → NEC)
 
 
     .layout{"data-name" => "default"}
