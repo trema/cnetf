@@ -211,8 +211,8 @@
     <div class="slide">
       <h1>セットアップしてみよう!</h1>
       <pre class="brush: bash">
-        % git clone git://github.com/trema/trema.git
-        % ./trema/build.rb
+        $ git clone git://github.com/trema/trema.git
+        $ ./trema/build.rb
       </pre>
       <h2>たったこれだけ!</h2>
     </div>
@@ -234,7 +234,7 @@
 
       <br/>
       <p>trema run コマンドで実行</p>
-      <pre class="brush: bash">
+      <pre class="brush: plain">
         % ./trema run ./simple-controller.rb
       </pre>
     </div>
@@ -311,8 +311,8 @@
         <li>trema run の -c オプションに仮想ネットワーク構成を渡すと、その上でコントローラが起動する</li>
         <li>スイッチが起動したことを SimpleController#switch_connected ハンドラがハンドルし "Hello switch 0x○○○!" を表示</li>
       </ul>
-      <pre class="brush: bash">
-        % ./trema run simple-controller.rb -c network.conf
+      <pre class="brush: plain">
+        % ./trema run ./simple-controller.rb -c network.conf
         Hello switch 0xabc!
         Hello switch 0xdef!
       </pre>
@@ -406,7 +406,7 @@
         <li>host1 から host2 にパケットを 10 個送信</li>
       </ul>
 
-      <pre class="brush: bash">
+      <pre class="brush: plain">
         % ./trema send_packets --source host1 --dest host2 --n_pkts 10 --pps 10
         New packet_in message!
         New packet_in message!
@@ -585,7 +585,7 @@
 
       <p>cbench: 一秒あたりの flow_mod 数を計測するベンチマーク</p>
 
-      <pre class="brush: bash">
+      <pre class="brush: plain">
         % ./trema run simple-controller -d
         % ./objects/oflops/bin/cbench --switches 1 --loops 10 --delay 1000
         cbench: controller benchmarking tool
@@ -617,7 +617,7 @@
         <li>Ruby 版の 1.7 倍くらい速い</li>
         <li>最初は Ruby でサッと書いて、必要に応じて C で書き直すのがおすすめ</li>
       </ul>
-      <pre class="brush: bash">
+      <pre class="brush: plain">
         cbench: controller benchmarking tool
            running in mode 'latency'
            connecting to controller at localhost:6633 
@@ -648,7 +648,7 @@
         <li>Trema には大小さまざまなサンプルアプリが付属 (Ruby, C 両方)</li>
         <li>ひととおり動かしてソースを読むことをおすすめ</li>
       </ul>
-      <pre class="brush: bash">
+      <pre class="brush: plain">
         % ls src/examples
         cbench_switch          dumper            hash_bench
         hello_trema            learning_switch   list_switches
