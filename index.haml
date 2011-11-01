@@ -102,12 +102,12 @@
 
     .slide
       %h1 なぜ短くしたいのか？
-      %h2 プログラムは短ければ短いほど、
+      %h2 短ければ短いほど、
       %ul
         %li 早く完成させることができ、
         %li バグが少なく、
         %li すぐ読むことができ、
-        %li メンテナンスが楽だから
+        %li メンテナンスも楽だから
       %pre.brush:.ruby
         :preserve
           # 例: Trema で書いたリピータハブ
@@ -129,7 +129,7 @@
 
     .slide
       %h1 NOX じゃダメなの？
-      %p NOX の pyswitch.py から抜粋
+      %p なんかいろいろと冗長だ
       %pre.brush:.python
         :preserve
           class pyswitch(Component):
@@ -159,9 +159,13 @@
 
     .slide
       %h1 Beacon じゃダメなの?
-      %p プログラマに「パブリック スタティック ボイド メイン」と書かせる言語は好きではない
+      %p
+        プログラマに
+        %b 「パブリック スタティック ボイド メイン」
+        と書かせる類の言語は好きじゃない
       %div{:align => "center"}
-        %img{:src => "./static-typing.gif"}/
+        %img{:src => "./static-typing.gif", :height => "40%"}/
+        %p 「よし! これでこの辺も少し整理できたぞ!」
 
 
     .slide
@@ -201,7 +205,7 @@
 
     .slide
       %h1 コントローラを書いてみよう!
-      %h2 コントローラはクラスとして定義し、Controller クラスを継承
+      %p コントローラはクラスとして定義し、Controller クラスを継承
       %pre.brush:.ruby
         :preserve
           # simple-controller.rb
@@ -209,7 +213,8 @@
           class SimpleController < Controller
           end
       %br
-      %h2 trema run コマンドで起動
+
+      %p trema run コマンドで起動
       %pre.brush:.plain
         :preserve
           % ./trema run ./simple-controller.rb
@@ -229,16 +234,16 @@
             end
           end
       %ul
-        %li OpenFlow コントローラはイベントドリブンであり、各種イベントやメッセージが来たときにどうするか (=ハンドラメソッド) が必要
+        %li OpenFlow コントローラはイベントドリブン
         %li ハンドラメソッドを書くと自動的に登録される (ex. Rails)
-        %li ヘルパメソッド :to_hex は int を 0xabc のような 16 進文字列に変換
+        %li :to_hex は int を "0xabc" のような 16 進文字列に変換するヘルパメソッド
 
 
     .slide
       %h1 C で書くとこうなる
       %pre.brush:.ruby
         :preserve
-          #include <inttypes.h>
+          #include &lt;inttypes.h&gt;
           #include "trema.h"
 
           static void
@@ -265,19 +270,19 @@
 
 
     .slide
-      %h1 スイッチをつなげてみよう!
-      %ul
-        %li コントローラは Trema の仮想ネットワークで実行可能
-        %li 仮想ネットワークの構成は上の DSL で記述
+      %h1 OpenFlow スイッチを持っていなくても大丈夫!
+
+      %p 仮想ネットワークにスイッチを追加
       %pre.brush:.ruby
         :preserve
           # network.conf
           vswitch { dpid 0xabc }  # 仮想スイッチその 1
           vswitch { dpid 0xdef }  # 仮想スイッチその 2
+
       %br
-      %ul
-        %li trema run の -c オプションに仮想ネットワーク構成を渡すと、その上でコントローラが起動する
-        %li スイッチが起動したことを SimpleController#switch_connected ハンドラがハンドルし "Hello switch 0x○○○!" を表示
+      %br
+
+      %p 仮想ネットワークの上でコントローラが起動
       %pre.brush:.plain
         :preserve
           % ./trema run ./simple-controller.rb -c network.conf
@@ -290,7 +295,7 @@
       %ul
         %li 実は、OpenFlow には switch_connected イベントというものは無い
         %li Trema がスイッチの接続と切断をイベントに変換
-        %li 裏では次の OpenFlow シーケンスが走っている
+        %li 裏では次の OpenFlow シーケンスが走る
       %br
       %br
       %pre
