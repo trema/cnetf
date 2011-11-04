@@ -84,7 +84,8 @@
       %h1 自己紹介
       %p Trema チーム @ NEC 中央研究所
       %ul
-        %li 高宮 (元 分散ミドルとか HPC)
+        %li
+          %span{:style => "background-color: #ffff00"} 高宮 (元 分散ミドルとか HPC)
         %li 須堯 (元 KAME、スーパーハカー)
 
 
@@ -96,10 +97,15 @@
         %li 「よくある処理」が簡単に短く書ける
         %li フルスタック: ノート一台で開発できる
         %li 「コーディング → テスト → デバッグ」のループをタイトに回せる
+      %br
+      %p
+        %span{:style => "background-color: #ffff00"} ...そして、OpenFlow には今までこうしたフレームワークが無かった
 
 
     .slide
       %h1 Trema フレームワークの特長
+      %p
+        %span{:style => "background-color: #ffff00"} 「今風な」OpenFlow フレームワーク
       %ul
         %li Ruby or C (Ruby の生産性 + C の性能)
         %li フルスタック: ノート一台で開発できる
@@ -117,9 +123,11 @@
     .slide
       %h1 業界の声 2/2
       %p
-        %i "Trema はまったく簡単だ"
+        %i "Trema は
+        %span{:style => "background-color: #ffff00"} まっ・たく・簡・単・だ
+        "
       .right
-        %p 元ガリガリ男さん
+        %p 元 ひ弱男さん
 
       %div{:align => "center"}
         %img{:src => "./kantan.jpg", :height => "60%"}/
@@ -132,12 +140,21 @@
 
 
     .slide
+      %h1 Trema の設計思想
+      .vcenter
+        %h1
+          「
+          %span{:style => "background-color: #ffff00"}短く書けて、
+          すぐ動かせる」
+        
+
+    .slide
       %h1 なぜ短く書きたいのか？
       %p 短ければ短いほど、
       %ul
-        %li 早く完成でき、
-        %li バグが少なく、
-        %li メンテが楽だから
+        %li 早くサッと作れて、
+        %li バグの発生率が小さく、
+        %li 後々のメンテが楽だから
 
         
     .slide
@@ -158,7 +175,10 @@
               )
             end
           end
-      %p 本質的な処理だけ書けば OK
+      %p
+        必要な処理だけ書けば OK
+        %br
+        (flow_mod して FLOOD)
 
 
     .slide
@@ -170,7 +190,7 @@
 
     .slide
       %h1 NOX (Python バインディング)
-      %p いろいろと冗長だ
+      %p まっ・たく・冗・長・だ
       %pre{:class => "brush: python; highlight: [2, 8, 17]"}
         :preserve
           class pyswitch(Component):
@@ -204,34 +224,60 @@
 
 
     .slide
-      %h1 すぐ動かせる、とは？
+      %h1 Trema の設計思想
+      .vcenter
+        %h1
+          「短く書けて、
+          %span{:style => "background-color: #ffff00"} すぐ動かせる
+          」
+
+
+    .slide
+      %h1 OpenFlow 開発のめんどくささ
       %p
         %i "OpenFlow は開発環境の構築が面倒だ"
-        %i (Open vSwitch や NW, VM などなど...)
+        %i (ネットワーク設定や VM 構築とか)
 
       %br
 
       %p
-        %b → Trema なら PC 1 台で簡単にできます!
-      %ul
-        %li 仮想 NW を作ってコントローラを実行
-        %li テストパケットの送受信
-        %li フローテーブルやメッセージのダンプ
+        %i "俺 OpenFlow スイッチ持ってないよ"
+
+      %br
+
+      %p
+        %i "そもそも OpenFlow の実験ができるネットワーク持ってないし..."
+
+      .right
+        %p プログラマの声
 
 
     .slide
-      %h1 ライブデモ
+      %h1 Trema なら簡単にできます!
+      %p
+        開発マシン上に仮想ネットワークを構築し、その上でコントローラの様々な機能テストができます
+      %ul
+        %li コントローラの実行
+        %li 仮想ホスト間でのパケット送受信テスト
+        %li スイッチのフローテーブルのダンプ etc.
+
+      %br
+
+      %p.right 使い勝手を紹介→
+        
+
+    .slide
       .vcenter
         %h1 Trema を使った開発の流れ
 
 
     .slide
       %h1 セットアップしてみよう!
-      %p たったこれだけ!
       %pre.brush:.plain
         :preserve
           $ git clone git://github.com/trema/trema.git
           $ ./trema/build.rb
+      %p たったこれだけ!
 
 
     .slide
@@ -321,33 +367,6 @@
 
 
     .slide
-      %h1 switch_connected が届くまで
-      %p 以下の処理がイベントに変換された
-      %br
-      %pre
-        :preserve
-            スイッチ                          コントローラ
-              |                                |
-              | secchan                        |
-              |------------------------------->|
-              |                                |
-              |                          HELLO |
-              |<-------------------------------|
-              | HELLO                          |
-              |------------------------------->|
-              |                                |
-              |               FEATURES REQUEST |
-              |<-------------------------------|
-              | FEATURES REPLY                 |
-              |------------------------------->|
-              |                                |
-              |                           Init |
-              |<-------------------------------|
-              |                                |
-              |                                | switch_ready
-
-
-    .slide
       %h1 パケットを送ってみよう!
       %ul
         %li 仮想ホストを 2 台追加 (vhost)
@@ -422,11 +441,10 @@
 
 
     .slide
-      %h1 Advanced DSL Usage
-      %p 大規模で複雑なトポロジを書くのは面倒で間違いやすい
+      %h1 大規模で複雑なトポロジ
+      %p スイッチ 10 台のフルメッシュ接続をベタに書いた例 (約 80 行)
       %pre.brush:.ruby
         :preserve
-          # スイッチ 10 台のフルメッシュ接続をベタに書いた例 (約 80 行)
           vswitch { dpid "0x1" }
           vswitch { dpid "0x2" }
           vswitch { dpid "0x3" }
@@ -514,19 +532,24 @@
 
 
     .slide
-      %h1 ExactMatch.from
+      %h1 気の効いた API
 
-      %p ほかにもこんな気の効いた API が
+      %p Exact match が簡単に作れる:
 
-      %pre.brush:.ruby
+      %pre{:class => "brush: ruby; highlight: [3]"}
         :preserve
-          ExactMatch.from( message )
+          send_flow_mod_add(
+            dpid,
+            :match => ExactMatch.from( message ),
+            :buffer_id => message.buffer_id,
+            :actions => ActionOutput.new( message.in_port + 1 )
+          )
 
       %p まじめに書くとこう:
 
       %pre.brush:.ruby
         :preserve
-          Match.new(
+          :match => Match.new(
             :in_port = message.in_port,
             :nw_src => message.nw_src,
             :nw_dst => message.nw_dst,
@@ -641,7 +664,7 @@
       %h1 まとめ
       %ul
         %li Trema: OpenFlow のコントローラを短く書けて、すぐ動かせる
-        %li コミッタ募集中!
+        %li コミッタやバグレポート募集中!
         %li
           Software Design で好評連載中!
           %br
@@ -656,7 +679,7 @@
           %a{:href => "http://trema.github.com/trema/"} http://trema.github.com/trema/
         %li
           Ruby API ドキュメント:
-          %a{:href => "http://rubydoc.info/github/trema/trema/master/frames"} http://rubydoc.info/github/trema/trema/master/frames
+          %a{:href => "http://rubydoc.info/github/trema/trema/"} http://rubydoc.info/github/trema/trema/
         %li
           Twitter アカウント:
           %a{:href => "http://twitter.com/trema_news"} @trema_news
@@ -665,6 +688,38 @@
     .slide
       .vcenter
         %h2 質問？
+
+
+    .slide
+      .vcenter
+        %h2 バックアップ
+
+
+    .slide
+      %h1 switch_connected が届くまで
+      %p 以下の処理がイベントに変換された
+      %br
+      %pre
+        :preserve
+            スイッチ                          コントローラ
+              |                                |
+              | secchan                        |
+              |------------------------------->|
+              |                                |
+              |                          HELLO |
+              |<-------------------------------|
+              | HELLO                          |
+              |------------------------------->|
+              |                                |
+              |               FEATURES REQUEST |
+              |<-------------------------------|
+              | FEATURES REPLY                 |
+              |------------------------------->|
+              |                                |
+              |                           Init |
+              |<-------------------------------|
+              |                                |
+              |                                | switch_connected
 
 
     .layout{"data-name" => "default"}
